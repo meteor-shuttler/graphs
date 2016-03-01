@@ -55,6 +55,7 @@ Add to collection `collection.isGraph = true;`.
 Used package [matb33:collection-hooks](https://github.com/matb33/meteor-collection-hooks).
 
 Available field `this.action` containing` insert` `update` or` remove`.
+Available fields `this.sourceChanged: Boolean` and `this.targetChanged: Boolean`.
 
 #### collection.after.link
 > (handler: (userId, doc, fieldNames, modifier, options) => void)
@@ -65,6 +66,18 @@ Wrapper around [matb33:collection-hooks](https://github.com/matb33/meteor-collec
 > (handler: (userId, doc, fieldNames, modifier, options) => void)
 
 Wrapper around [matb33:collection-hooks](https://github.com/matb33/meteor-collection-hooks) [.after.update](https://github.com/matb33/meteor-collection-hooks#beforeupdateuserid-doc-fieldnames-modifier-options) and [.after.remove](https://github.com/matb33/meteor-collection-hooks#afterremoveuserid-doc).
+
+#### collection.after.link.source
+> (handler: (userId, doc, fieldNames, modifier, options) => void)
+
+#### collection.after.link.target
+> (handler: (userId, doc, fieldNames, modifier, options) => void)
+
+#### collection.after.unlink.source
+> (handler: (userId, doc, fieldNames, modifier, options) => void)
+
+#### collection.after.unlink.target
+> (handler: (userId, doc, fieldNames, modifier, options) => void)
 
 ### Helpers
 Used package [dburles:collection-helpers](https://github.com/dburles/meteor-collection-helpers/).
@@ -126,6 +139,10 @@ collection.deny({
 ```
 
 ## Versions
+
+### 0.0.4
+* Add `.after.link.source`, `.after.link.target`, `.after.unlink.source`, `.after.unlink.target`
+* Add to after handler `this.sourceChanged` and `this.targetChanged`
 
 ### 0.0.3
 * Rename `.insert.link` argument `query` to `customFields`

@@ -66,12 +66,16 @@ Mongo.Collection.prototype.attachGraph = function() {
 	// (handler: (userId, doc, fieldNames, modifier, options) => void)
 	this.after.link = function(handler) {
 		collection.after.update(function(userId, doc, fieldNames, modifier, options) {
-			if (!lodash.isEqual(this.previous._source, doc._source) || !lodash.isEqual(this.previous._target, doc._target)) {
+			this.sourceChanged = !lodash.isEqual(this.previous._source, doc._source);
+			this.targetChanged = !lodash.isEqual(this.previous._target, doc._target);
+			if (this.sourceChanged || this.targetChanged) {
 				this.action = 'update';
 				handler.apply(this, arguments);
 			}
 		});
 		collection.after.insert(function(userId, doc) {
+			this.sourceChanged = true;
+			this.targetChanged = true;
 			this.action = 'insert';
 			handler.apply(this, arguments);
 		});
@@ -80,14 +84,54 @@ Mongo.Collection.prototype.attachGraph = function() {
 	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
 	this.after.unlink = function(handler) {
 		collection.after.update(function(userId, doc, fieldNames, modifier, options) {
-			if (!lodash.isEqual(this.previous._source, doc._source) || !lodash.isEqual(this.previous._target, doc._target)) {
+			this.sourceChanged = !lodash.isEqual(this.previous._source, doc._source);
+			this.targetChanged = !lodash.isEqual(this.previous._target, doc._target);
+			if (this.sourceChanged || this.targetChanged) {
 				this.action = 'update';
 				handler.apply(this, arguments);
 			}
 		});
 		collection.after.remove(function(userId, doc) {
+			this.sourceChanged = true;
+			this.targetChanged = true;
 			this.action = 'remove';
 			handler.apply(this, arguments);
+		});
+	};
+	
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
+	this.after.link.source = function(handler) {
+		collection.after.link(function(userId, doc, fieldNames, modifier, options) {
+			if (this.sourceChanged) {
+				handler.apply(this, arguments);
+			}
+		});
+	};
+	
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
+	this.after.link.target = function(handler) {
+		collection.after.link(function(userId, doc, fieldNames, modifier, options) {
+			if (this.targetChanged) {
+				handler.apply(this, arguments);
+			}
+		});
+	};
+	
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
+	this.after.unlink.source = function(handler) {
+		collection.after.unlink(function(userId, doc, fieldNames, modifier, options) {
+			if (this.sourceChanged) {
+				handler.apply(this, arguments);
+			}
+		});
+	};
+	
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
+	this.after.unlink.target = function(handler) {
+		collection.after.unlink(function(userId, doc, fieldNames, modifier, options) {
+			if (this.targetChanged) {
+				handler.apply(this, arguments);
+			}
 		});
 	};
 	
