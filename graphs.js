@@ -11,11 +11,11 @@ Mongo.Collection.prototype.attachGraph = function() {
 		})
 	);
 	
-	// (source: Document|Ref, target: Document|Ref, query: Object, callback?: Function) => id: String
-	this.insert.link = function(source, target, query, callback) {
+	// (source: Document|Ref, target: Document|Ref, customFields: Object, callback?: Function) => id: String
+	this.insert.link = function(source, target, customFields, callback) {
 		return collection.insert(lodash.merge(
 			{ _source: Shuttler.Ref.new(source), _target: Shuttler.Ref.new(target) }
-			,query
+			,customFields
 		), callback);
 	};
 	

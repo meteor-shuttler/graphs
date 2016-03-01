@@ -28,7 +28,7 @@ Attach to the collection, all methods and all helpers.
 Add to collection `collection.isGraph = true;`.
 
 #### collection.insert.link
-> (source: Document|Ref, target: Document|Ref, query: Object, callback?: Function) => id: String
+> (source: Document|Ref, target: Document|Ref, customFields: Object, callback?: Function) => id: String
 
 #### collection.find.link
 > (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
@@ -124,3 +124,8 @@ collection.deny({
     }
 });
 ```
+
+## Versions
+
+### 0.0.3
+* Rename `.insert.link` argument `query` to `customFields`
