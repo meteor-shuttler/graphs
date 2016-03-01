@@ -6,15 +6,15 @@ Mongo.Collection.prototype.attachGraph = function() {
 	
 	this.attachSchema(
 		new SimpleSchema({
-			_source: { type: Shuttle.Ref.Schema },
-			_target: { type: Shuttle.Ref.Schema }
+			_source: { type: Shuttler.Ref.Schema },
+			_target: { type: Shuttler.Ref.Schema }
 		})
 	);
 	
 	// (source: Document|Ref, target: Document|Ref, query: Object, callback?: Function) => id: String
 	this.insert.link = function(source, target, query, callback) {
 		return collection.insert(lodash.merge(
-			{ _source: Shuttle.Ref.new(source), _target: Shuttle.Ref.new(target) }
+			{ _source: Shuttler.Ref.new(source), _target: Shuttler.Ref.new(target) }
 			,query
 		), callback);
 	};
@@ -22,21 +22,21 @@ Mongo.Collection.prototype.attachGraph = function() {
 	// (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 	this.findOne.link = function(source, target, query, options) {
 		return collection.findOne(lodash.merge(
-			Shuttle.Ref.new(source, '_source'), Shuttle.Ref.new(target, '_target'), query
+			Shuttler.Ref.new(source, '_source'), Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
 	// (target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 	this.findOne.link.to = function(target, query, options) {
 		return collection.findOne(lodash.merge(
-			Shuttle.Ref.new(target, '_target'), query
+			Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
 	// (source: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 	this.findOne.link.from = function(source, query, options) {
 		return collection.findOne(lodash.merge(
-			Shuttle.Ref.new(source, '_source'), query
+			Shuttler.Ref.new(source, '_source'), query
 		), options);
 	};
 	
@@ -45,21 +45,21 @@ Mongo.Collection.prototype.attachGraph = function() {
 	// (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 	this.find.links = function(source, target, query, options) {
 		return collection.find(lodash.merge(
-			Shuttle.Ref.new(source, '_source'), Shuttle.Ref.new(target, '_target'), query
+			Shuttler.Ref.new(source, '_source'), Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
 	// (target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 	this.find.links.to = function(target, query, options) {
 		return collection.find(lodash.merge(
-			Shuttle.Ref.new(target, '_target'), query
+			Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
 	// (source: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 	this.find.links.from = function(source, query, options) {
 		return collection.find(lodash.merge(
-			Shuttle.Ref.new(source, '_source'), query
+			Shuttler.Ref.new(source, '_source'), query
 		), options);
 	};
 	
@@ -93,10 +93,10 @@ Mongo.Collection.prototype.attachGraph = function() {
 	
 	this.helpers({
 		source: function() {
-			return Shuttle.Ref(this._source);
+			return Shuttler.Ref(this._source);
 		},
 		target: function() {
-			return Shuttle.Ref(this._target);
+			return Shuttler.Ref(this._target);
 		}
 	});
 	

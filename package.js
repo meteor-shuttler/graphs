@@ -1,8 +1,8 @@
 Package.describe({
-  name: 'shuttle:graphs',
-  version: '0.0.0',
+  name: 'shuttler:graphs',
+  version: '0.0.1',
   summary: 'Oriented graph methods with shema and restrictions.',
-  git: 'https://github.com/meteor-shuttle/graphs',
+  git: 'https://github.com/meteor-shuttler/graphs',
   documentation: 'README.md'
 });
 
@@ -17,9 +17,9 @@ Package.onUse(function(api) {
   api.use('dburles:collection-helpers@1.0.4');
   api.use('matb33:collection-hooks@0.8.1');
   api.use('ivansglazunov:restrict@0.0.2');
-  api.use('shuttle:ref@0.0.1');
+  api.use('shuttler:ref@0.0.2');
   
   api.addFiles('graphs.js');
   
-  api.export('Shuttle');
+  api.export('Shuttler');
 });
