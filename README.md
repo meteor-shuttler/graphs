@@ -39,8 +39,14 @@ Add to collection `collection.isGraph = true;`.
 #### collection.find.link.to
 > (target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 
+##### Aliases
+* `.link.target`
+
 #### collection.find.link.from
 > (source: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
+
+##### Aliases
+* `.link.source`
 
 #### collection.find.links
 > (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
@@ -48,8 +54,14 @@ Add to collection `collection.isGraph = true;`.
 #### collection.find.links.to
 > (target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 
+##### Aliases
+* `.links.target`
+
 #### collection.find.links.from
 > (source: Document|Ref|(id: String), query: Object, options: Object) => Cursor
+
+##### Aliases
+* `.links.source`
 
 ### Hooks
 Used package [matb33:collection-hooks](https://github.com/matb33/meteor-collection-hooks).
@@ -139,6 +151,10 @@ collection.deny({
 ```
 
 ## Versions
+
+### 0.0.5
+* [Add support collection-hooks fetchPrevious](https://github.com/meteor-shuttler/graphs/issues/2)
+* [Add aliases](https://github.com/meteor-shuttler/graphs/issues/3)
 
 ### 0.0.4
 * Add `.after.link.source`, `.after.link.target`, `.after.unlink.source`, `.after.unlink.target`
