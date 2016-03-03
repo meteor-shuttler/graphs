@@ -11,8 +11,8 @@ var a2 = a.insert({ _id: 'a2' );
 
 var b = new Mongo.Collection('b');
 b.attachGraph();
-b.insertLink(a1, a2); // ~"b1"
-var b1 = b.findLinkTo(a2); // { _id: "b1", _source: { id: 'a1', collection: 'a' }, _target: { id: 'a1', collection: 'a' } }
+b.link.insert(a1, a2); // ~"b1"
+b.link.find.to(a2); // { _id: "b1", _source: { id: 'a1', collection: 'a' }, _target: { id: 'a1', collection: 'a' } }
 b1.source() // { _id: 'a1' }
 ```
 
@@ -27,41 +27,41 @@ Attach to the collection, all methods and all helpers.
 
 Add to collection `collection.isGraph = true;`.
 
-#### collection.insert.link
+#### collection.link.insert
 > (source: Document|Ref, target: Document|Ref, customFields: Object, callback?: Function) => id: String
 
-#### collection.find.link
+#### collection.link.find
 > (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 
 ##### Aliases
-* `collection.findOne.link`
+* `collection.link.findOne` `collection.links.findOne`
 
-#### collection.find.link.to
+#### collection.link.find.to
 > (target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 
 ##### Aliases
-* `.link.target`
+* `collection.*.*.target`
 
-#### collection.find.link.from
+#### collection.link.find.from
 > (source: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 
 ##### Aliases
-* `.link.source`
+* `collection.*.*.source`
 
-#### collection.find.links
+#### collection.links.find
 > (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 
-#### collection.find.links.to
+#### collection.links.find.to
 > (target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 
 ##### Aliases
-* `.links.target`
+* `collection.*.*.target`
 
-#### collection.find.links.from
+#### collection.links.find.from
 > (source: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 
 ##### Aliases
-* `.links.source`
+* `collection.*.*.source`
 
 ### Hooks
 Used package [matb33:collection-hooks](https://github.com/matb33/meteor-collection-hooks).
@@ -151,6 +151,9 @@ collection.deny({
 ```
 
 ## Versions
+
+### 0.0.6
+* [Hot fix imposition of prototypes on the server](https://github.com/meteor-shuttler/graphs/issues/5)
 
 ### 0.0.5
 * [Add support collection-hooks fetchPrevious](https://github.com/meteor-shuttler/graphs/issues/2)

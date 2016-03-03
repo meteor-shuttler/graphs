@@ -11,8 +11,11 @@ Mongo.Collection.prototype.attachGraph = function() {
 		})
 	);
 	
+	this.link = {};
+	this.links = {};
+	
 	// (source: Document|Ref, target: Document|Ref, customFields: Object, callback?: Function) => id: String
-	this.insert.link = function(source, target, customFields, callback) {
+	this.link.insert = function(source, target, customFields, callback) {
 		return collection.insert(lodash.merge(
 			{ _source: Shuttler.Ref.new(source), _target: Shuttler.Ref.new(target) }
 			,customFields
@@ -20,56 +23,46 @@ Mongo.Collection.prototype.attachGraph = function() {
 	};
 	
 	// (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
-	this.findOne.link = function(source, target, query, options) {
+	this.link.find = this.link.findOne = this.links.findOne = function(source, target, query, options) {
 		return collection.findOne(lodash.merge(
 			Shuttler.Ref.new(source, '_source'), Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
 	// (target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
-	this.findOne.link.to = function(target, query, options) {
+	this.link.find.to = function(target, query, options) {
 		return collection.findOne(lodash.merge(
 			Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
-	this.findOne.link.target = this.findOne.link.to;
-	
 	// (source: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
-	this.findOne.link.from = function(source, query, options) {
+	this.link.find.from = function(source, query, options) {
 		return collection.findOne(lodash.merge(
 			Shuttler.Ref.new(source, '_source'), query
 		), options);
 	};
 	
-	this.findOne.link.source = this.findOne.link.from;
-	
-	this.find.link = this.findOne.link;
-	
 	// (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
-	this.find.links = function(source, target, query, options) {
+	this.links.find = function(source, target, query, options) {
 		return collection.find(lodash.merge(
 			Shuttler.Ref.new(source, '_source'), Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
 	// (target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
-	this.find.links.to = function(target, query, options) {
+	this.links.find.to = this.links.find.target = function(target, query, options) {
 		return collection.find(lodash.merge(
 			Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
-	this.find.links.target = this.find.links.to;
-	
 	// (source: Document|Ref|(id: String), query: Object, options: Object) => Cursor
-	this.find.links.from = function(source, query, options) {
+	this.links.find.from = this.links.find.source = function(source, query, options) {
 		return collection.find(lodash.merge(
 			Shuttler.Ref.new(source, '_source'), query
 		), options);
 	};
-	
-	this.find.links.source = this.find.links.from;
 	
 	// (handler: (userId, doc, fieldNames, modifier, options) => void, options?)
 	this.after.link = function(handler, options) {
