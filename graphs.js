@@ -33,12 +33,16 @@ Mongo.Collection.prototype.attachGraph = function() {
 		), options);
 	};
 	
+	this.findOne.link.target = this.findOne.link.to;
+	
 	// (source: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 	this.findOne.link.from = function(source, query, options) {
 		return collection.findOne(lodash.merge(
 			Shuttler.Ref.new(source, '_source'), query
 		), options);
 	};
+	
+	this.findOne.link.source = this.findOne.link.from;
 	
 	this.find.link = this.findOne.link;
 	
@@ -56,12 +60,16 @@ Mongo.Collection.prototype.attachGraph = function() {
 		), options);
 	};
 	
+	this.find.links.target = this.find.links.to;
+	
 	// (source: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 	this.find.links.from = function(source, query, options) {
 		return collection.find(lodash.merge(
 			Shuttler.Ref.new(source, '_source'), query
 		), options);
 	};
+	
+	this.find.links.source = this.find.links.from;
 	
 	// (handler: (userId, doc, fieldNames, modifier, options) => void)
 	this.after.link = function(handler) {
