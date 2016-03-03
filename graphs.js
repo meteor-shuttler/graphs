@@ -71,8 +71,8 @@ Mongo.Collection.prototype.attachGraph = function() {
 	
 	this.find.links.source = this.find.links.from;
 	
-	// (handler: (userId, doc, fieldNames, modifier, options) => void)
-	this.after.link = function(handler) {
+	// (handler: (userId, doc, fieldNames, modifier, options) => void, options?)
+	this.after.link = function(handler, options) {
 		collection.after.update(function(userId, doc, fieldNames, modifier, options) {
 			this.sourceChanged = !lodash.isEqual(this.previous._source, doc._source);
 			this.targetChanged = !lodash.isEqual(this.previous._target, doc._target);
@@ -80,7 +80,7 @@ Mongo.Collection.prototype.attachGraph = function() {
 				this.action = 'update';
 				handler.apply(this, arguments);
 			}
-		});
+		}, options);
 		collection.after.insert(function(userId, doc) {
 			this.sourceChanged = true;
 			this.targetChanged = true;
@@ -89,8 +89,8 @@ Mongo.Collection.prototype.attachGraph = function() {
 		});
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
-	this.after.unlink = function(handler) {
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	this.after.unlink = function(handler, options) {
 		collection.after.update(function(userId, doc, fieldNames, modifier, options) {
 			this.sourceChanged = !lodash.isEqual(this.previous._source, doc._source);
 			this.targetChanged = !lodash.isEqual(this.previous._target, doc._target);
@@ -98,7 +98,7 @@ Mongo.Collection.prototype.attachGraph = function() {
 				this.action = 'update';
 				handler.apply(this, arguments);
 			}
-		});
+		}, options);
 		collection.after.remove(function(userId, doc) {
 			this.sourceChanged = true;
 			this.targetChanged = true;
@@ -107,40 +107,40 @@ Mongo.Collection.prototype.attachGraph = function() {
 		});
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
-	this.after.link.source = function(handler) {
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	this.after.link.source = function(handler, options) {
 		collection.after.link(function(userId, doc, fieldNames, modifier, options) {
 			if (this.sourceChanged) {
 				handler.apply(this, arguments);
 			}
-		});
+		}, options);
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
-	this.after.link.target = function(handler) {
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	this.after.link.target = function(handler, options) {
 		collection.after.link(function(userId, doc, fieldNames, modifier, options) {
 			if (this.targetChanged) {
 				handler.apply(this, arguments);
 			}
-		});
+		}, options);
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
-	this.after.unlink.source = function(handler) {
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	this.after.unlink.source = function(handler, options) {
 		collection.after.unlink(function(userId, doc, fieldNames, modifier, options) {
 			if (this.sourceChanged) {
 				handler.apply(this, arguments);
 			}
-		});
+		}, options);
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void)
-	this.after.unlink.target = function(handler) {
+	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	this.after.unlink.target = function(handler, options) {
 		collection.after.unlink(function(userId, doc, fieldNames, modifier, options) {
 			if (this.targetChanged) {
 				handler.apply(this, arguments);
 			}
-		});
+		}, options);
 	};
 	
 	this.helpers({
