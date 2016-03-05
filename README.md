@@ -2,6 +2,15 @@
 
 Oriented graph methods with shema and restrictions.
 
+## Install
+
+```
+meteor add shuttler:graphs
+```
+
+##### Required
+* [shuttler:ref](https://github.com/meteor-shuttler/ref)
+
 ## Example
 
 ```js
