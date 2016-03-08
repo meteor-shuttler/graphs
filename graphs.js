@@ -1,5 +1,6 @@
 // ()
 Mongo.Collection.prototype.attachGraph = function() {
+	if (this.isGraph) throw new Meteor.Error('Collection '+this._name+' is already graph.');
 	this.isGraph = true;
 	
 	var collection = this;
@@ -145,13 +146,6 @@ Mongo.Collection.prototype.attachGraph = function() {
 		}
 	});
 	
-	this.attachRestriction('link');
-	this.attachRestriction('link.source');
-	this.attachRestriction('link.target');
-	this.attachRestriction('unlink');
-	this.attachRestriction('unlink.source');
-	this.attachRestriction('unlink.target');
-	
 	// (userId, doc, fieldNames, modifier, action) => Boolean
 	this.deny({
 		insert: function(userId, document) {
@@ -182,3 +176,61 @@ Mongo.Collection.prototype.attachGraph = function() {
 		}
 	});
 };
+
+Shuttler.getSelectorByDirection = function(direction, link) {
+	return direction=='link'?{_id:link._id}:link.Ref('_'+direction);
+};
+
+Shuttler.getRefByDirection = function(direction, link) {
+	return direction=='link'?link.Ref():link['_'+direction];
+};
+
+Shuttler.getDocumentByDirection = function(direction, link) {
+	return direction=='link'?link:link[direction]();
+};
+
+Shuttler.GraphSidesSchema = new SimpleSchema({
+	source: {
+		type: String,
+		allowedValues: ["source", "target"],
+	},
+	target: {
+		type: String,
+		optional: true,
+		autoValue: function() {
+			return Shuttler.GraphSidesSchema._inverter[this.field('source').value];
+		},
+	}
+});
+Shuttler.GraphSidesSchema._inverter = {'source':'target','target':'source'};
+
+Shuttler.GraphDirectionSchema = new SimpleSchema({
+	source: {
+		type: String,
+		allowedValues: ["source", "target", "link"],
+	},
+	target: {
+		type: String,
+		allowedValues: ["source", "target", "link"],
+		optional: true,
+		custom: function() {
+			if (this.field('source') == this.value) return 'notAllowed';
+		}
+	}
+});
+
+Shuttler.GraphDirectionsSchema = new SimpleSchema({
+	sources: {
+		type: [String],
+		allowedValues: ["source", "target", "link"],
+	},
+	targets: {
+		type: [String],
+		allowedValues: ["source", "target", "link"],
+		optional: true,
+		custom: function() {
+			var sources = this.field('sources');
+			if (lodash.intersection(sources, this.value).length) return 'notAllowed';
+		}
+	}
+});

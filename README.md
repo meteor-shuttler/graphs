@@ -161,6 +161,10 @@ collection.deny({
 
 ## Versions
 
+### 0.0.8
+* Support for `ivansglazunov:restrict@0.0.5`
+* Direction and sides schemas and methods.
+
 ### 0.0.6
 * [Hot fix imposition of prototypes on the server](https://github.com/meteor-shuttler/graphs/issues/5)
 
