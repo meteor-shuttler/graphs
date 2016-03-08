@@ -79,26 +79,30 @@ Available field `this.action` containing` insert` `update` or` remove`.
 Available fields `this.sourceChanged: Boolean` and `this.targetChanged: Boolean`.
 
 #### collection.after.link
-> (handler: (userId, doc, fieldNames, modifier, options) => void)
+> (handler: (userId, unlinked?, linked, fieldNames, modifier, options) => void)
+
+`unlinked` is defined only on `update`.
 
 Wrapper around [matb33:collection-hooks](https://github.com/matb33/meteor-collection-hooks) [.after.update](https://github.com/matb33/meteor-collection-hooks#beforeupdateuserid-doc-fieldnames-modifier-options) and [.after.insert](https://github.com/matb33/meteor-collection-hooks#afterinsertuserid-doc).
 
 #### collection.after.unlink
-> (handler: (userId, doc, fieldNames, modifier, options) => void)
+> (handler: (userId, unlinked, linked?, fieldNames, modifier, options) => void)
+
+`linked` is defined only on `update`.
 
 Wrapper around [matb33:collection-hooks](https://github.com/matb33/meteor-collection-hooks) [.after.update](https://github.com/matb33/meteor-collection-hooks#beforeupdateuserid-doc-fieldnames-modifier-options) and [.after.remove](https://github.com/matb33/meteor-collection-hooks#afterremoveuserid-doc).
 
 #### collection.after.link.source
-> (handler: (userId, doc, fieldNames, modifier, options) => void)
+> (handler: (userId, unlinked?, linked, fieldNames, modifier, options) => void)
 
 #### collection.after.link.target
-> (handler: (userId, doc, fieldNames, modifier, options) => void)
+> (handler: (userId, unlinked?, linked, fieldNames, modifier, options) => void)
 
 #### collection.after.unlink.source
-> (handler: (userId, doc, fieldNames, modifier, options) => void)
+> (handler: (userId, unlinked, linked?, fieldNames, modifier, options) => void)
 
 #### collection.after.unlink.target
-> (handler: (userId, doc, fieldNames, modifier, options) => void)
+> (handler: (userId, unlinked, linked?, fieldNames, modifier, options) => void)
 
 ### Helpers
 Used package [dburles:collection-helpers](https://github.com/dburles/meteor-collection-helpers/).
@@ -160,6 +164,10 @@ collection.deny({
 ```
 
 ## Versions
+
+### 0.0.9
+* New syntax of hooks with `unlinked` and `linked` variables.
+* Little fixes
 
 ### 0.0.8
 * Support for `ivansglazunov:restrict@0.0.5`

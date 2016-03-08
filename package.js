@@ -1,6 +1,6 @@
 Package.describe({
   name: 'shuttler:graphs',
-  version: '0.0.8',
+  version: '0.0.9',
   summary: 'Oriented graph methods with shema and restrictions.',
   git: 'https://github.com/meteor-shuttler/graphs',
   documentation: 'README.md'

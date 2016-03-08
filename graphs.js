@@ -65,72 +65,72 @@ Mongo.Collection.prototype.attachGraph = function() {
 		), options);
 	};
 	
-	// (handler: (userId, doc, fieldNames, modifier, options) => void, options?)
+	// (handler: (userId, unlinked?, linked, fieldNames, modifier, options) => void, options?)
 	this.after.link = function(handler, options) {
 		collection.after.update(function(userId, doc, fieldNames, modifier, options) {
 			this.sourceChanged = !lodash.isEqual(this.previous._source, doc._source);
 			this.targetChanged = !lodash.isEqual(this.previous._target, doc._target);
 			if (this.sourceChanged || this.targetChanged) {
 				this.action = 'update';
-				handler.apply(this, arguments);
+				handler.call(this, userId, this.previous, doc, fieldNames, modifier, options);
 			}
 		}, options);
 		collection.after.insert(function(userId, doc) {
 			this.sourceChanged = true;
 			this.targetChanged = true;
 			this.action = 'insert';
-			handler.apply(this, arguments);
+			handler.call(this, userId, undefined, doc);
 		});
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	// (handler: (userId, unlinked, linked?, fieldNames?, modifier?, options?) => void, options?)
 	this.after.unlink = function(handler, options) {
 		collection.after.update(function(userId, doc, fieldNames, modifier, options) {
 			this.sourceChanged = !lodash.isEqual(this.previous._source, doc._source);
 			this.targetChanged = !lodash.isEqual(this.previous._target, doc._target);
 			if (this.sourceChanged || this.targetChanged) {
 				this.action = 'update';
-				handler.apply(this, arguments);
+				handler.call(this, userId, this.previous, doc, fieldNames, modifier, options);
 			}
 		}, options);
 		collection.after.remove(function(userId, doc) {
 			this.sourceChanged = true;
 			this.targetChanged = true;
 			this.action = 'remove';
-			handler.apply(this, arguments);
+			handler.call(this, userId, doc, undefined);
 		});
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	// (handler: (userId, unlinked?, linked, fieldNames?, modifier?, options?) => void, options?)
 	this.after.link.source = function(handler, options) {
-		collection.after.link(function(userId, doc, fieldNames, modifier, options) {
+		collection.after.link(function(userId, unlinked, linked, fieldNames, modifier, options) {
 			if (this.sourceChanged) {
 				handler.apply(this, arguments);
 			}
 		}, options);
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	// (handler: (userId, unlinked?, linked, fieldNames?, modifier?, options?) => void, options?)
 	this.after.link.target = function(handler, options) {
-		collection.after.link(function(userId, doc, fieldNames, modifier, options) {
+		collection.after.link(function(userId, unlinked, linked, fieldNames, modifier, options) {
 			if (this.targetChanged) {
 				handler.apply(this, arguments);
 			}
 		}, options);
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	// (handler: (userId, unlinked, linked?, fieldNames?, modifier?, options?) => void, options?)
 	this.after.unlink.source = function(handler, options) {
-		collection.after.unlink(function(userId, doc, fieldNames, modifier, options) {
+		collection.after.unlink(function(userId, unlinked, linked, fieldNames, modifier, options) {
 			if (this.sourceChanged) {
 				handler.apply(this, arguments);
 			}
 		}, options);
 	};
 	
-	// (handler: (userId, doc, fieldNames?, modifier?, options?) => void, options?)
+	// (handler: (userId, unlinked, linked?, fieldNames?, modifier?, options?) => void, options?)
 	this.after.unlink.target = function(handler, options) {
-		collection.after.unlink(function(userId, doc, fieldNames, modifier, options) {
+		collection.after.unlink(function(userId, unlinked, linked, fieldNames, modifier, options) {
 			if (this.targetChanged) {
 				handler.apply(this, arguments);
 			}
@@ -177,14 +177,17 @@ Mongo.Collection.prototype.attachGraph = function() {
 	});
 };
 
+// (direction: Shuttler.GraphDirectionSchema, link: Document|Ref) => Object
 Shuttler.getSelectorByDirection = function(direction, link) {
-	return direction=='link'?{_id:link._id}:link.Ref('_'+direction);
+	return direction=='link'?{_id:Shuttler.Ref.new(link).id}:Shuttler.Ref.new(link,'_'+direction);
 };
 
+// (direction: Shuttler.GraphDirectionSchema, link: Document) => Ref
 Shuttler.getRefByDirection = function(direction, link) {
 	return direction=='link'?link.Ref():link['_'+direction];
 };
 
+// (direction: Shuttler.GraphDirectionSchema, link: Document) => Document
 Shuttler.getDocumentByDirection = function(direction, link) {
 	return direction=='link'?link:link[direction]();
 };
@@ -207,7 +210,7 @@ Shuttler.GraphSidesSchema._inverter = {'source':'target','target':'source'};
 Shuttler.GraphDirectionSchema = new SimpleSchema({
 	source: {
 		type: String,
-		allowedValues: ["source", "target", "link"],
+		allowedValues: ["source", "target", "link"]
 	},
 	target: {
 		type: String,
@@ -223,11 +226,12 @@ Shuttler.GraphDirectionsSchema = new SimpleSchema({
 	sources: {
 		type: [String],
 		allowedValues: ["source", "target", "link"],
+		minCount: 1
 	},
 	targets: {
 		type: [String],
 		allowedValues: ["source", "target", "link"],
-		optional: true,
+		minCount: 1,
 		custom: function() {
 			var sources = this.field('sources');
 			if (lodash.intersection(sources, this.value).length) return 'notAllowed';
