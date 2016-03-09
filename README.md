@@ -163,6 +163,64 @@ collection.deny({
 });
 ```
 
+### Methods
+
+#### Shuttler.getSelectorByDirection
+> (direction: 'source'|'target'|'link', link: Document|Ref) => Object
+
+```js
+test = Mongo.Collection('test');
+test.attachGraph();
+test.insert({ _id: '2' });
+test.insert({ _id: '3' });
+test.link.insert(test.findOne('2'), test.findOne('3'), { _id: '1' });
+Shuttler.getSelectorByDirection('source', test.findOne('1'));
+// { '_source.collection': 'test', '_source.id': '3' }
+Shuttler.getSelectorByDirection('link', test.findOne('1'));
+// { '_id': '1' }
+```
+
+#### Shuttler.getRefByDirection
+> (direction: 'source'|'target'|'link', link: Document|Ref) => Object
+
+```js
+test = Mongo.Collection('test');
+test.attachGraph();
+test.insert({ _id: '2' });
+test.insert({ _id: '3' });
+test.link.insert(test.findOne('2'), test.findOne('3'), { _id: '1' });
+Shuttler.getRefByDirection('source', test.findOne('1'));
+// { collection: 'test', id: '2' }
+Shuttler.getRefByDirection('link', test.findOne('1'));
+// { collection: 'test', id: '1' }
+```
+
+#### Shuttler.getDocumentByDirection
+> (direction: 'source'|'target'|'link', link: Document|Ref) => Object
+
+```js
+test = Mongo.Collection('test');
+test.attachGraph();
+test.insert({ _id: '2' });
+test.insert({ _id: '3' });
+test.link.insert(test.findOne('2'), test.findOne('3'), { _id: '1' });
+Shuttler.getRefByDirection('source', test.findOne('1'));
+// { _id: '2' }
+Shuttler.getRefByDirection('link', test.findOne('1'));
+// {  _id: '1', _source: { collection: 'test', id: '2' }, _target: { collection: 'test', id: '3' } }
+```
+
+### Schemas
+
+#### Shuttler.GraphSidesSchema
+[Source code](https://github.com/meteor-shuttler/graphs/blob/master/graphs.js#L195-L207)
+
+#### Shuttler.GraphDirectionSchema
+[Source code](https://github.com/meteor-shuttler/graphs/blob/master/graphs.js#L210-L223)
+
+#### Shuttler.GraphDirectionsSchema
+[Source code](https://github.com/meteor-shuttler/graphs/blob/master/graphs.js#L225-L240)
+
 ## Versions
 
 ### 0.0.9
