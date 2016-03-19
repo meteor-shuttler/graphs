@@ -41,6 +41,9 @@ Add to collection `collection.isGraph = true;`.
 #### collection.link.insert
 > (source: Document|Ref, target: Document|Ref, customFields: Object, callback?: Function) => id: String
 
+#### collection.link.update
+> (link: Document|Ref|String, source: Document|Ref, target: Document|Ref, customUpdateQuery: Object, callback?: Function) => count: Number
+
 #### collection.link.find
 > (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 

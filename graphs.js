@@ -23,6 +23,16 @@ Mongo.Collection.prototype.attachGraph = function() {
 		), callback);
 	};
 	
+	// (link: Document|Ref|String, source: Document|Ref, target: Document|Ref, customUpdateQuery: Object, callback?: Function) => count: Number
+	this.link.update = function(link, source, target, customUpdateQuery, callback) {
+		return collection.update((typeof(link)=='string'?link:Shuttler.Ref.soft(link)._id),
+			lodash.merge(
+				{ $set: lodash.merge(Shuttler.Ref.new(source, '_source'), Shuttler.Ref.new(target, '_target')) },
+				customUpdateQuery
+			), 
+		callback);
+	};
+	
 	// (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 	this.link.find = this.link.findOne = this.links.findOne = function(source, target, query, options) {
 		return collection.findOne(lodash.merge(
