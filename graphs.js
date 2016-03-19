@@ -89,7 +89,7 @@ Mongo.Collection.prototype.attachGraph = function() {
 			this.sourceChanged = true;
 			this.targetChanged = true;
 			this.action = 'insert';
-			handler.call(this, userId, undefined, doc);
+			handler.call(this, userId, undefined, collection._transform(doc));
 		});
 	};
 	
@@ -107,7 +107,7 @@ Mongo.Collection.prototype.attachGraph = function() {
 			this.sourceChanged = true;
 			this.targetChanged = true;
 			this.action = 'remove';
-			handler.call(this, userId, doc, undefined);
+			handler.call(this, userId, collection._transform(doc), undefined);
 		});
 	};
 	
