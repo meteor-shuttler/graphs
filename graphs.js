@@ -41,14 +41,14 @@ Mongo.Collection.prototype.attachGraph = function() {
 	};
 	
 	// (target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
-	this.link.find.to = function(target, query, options) {
+	this.link.find.to = this.link.find.target = function(target, query, options) {
 		return collection.findOne(lodash.merge(
 			Shuttler.Ref.new(target, '_target'), query
 		), options);
 	};
 	
 	// (source: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
-	this.link.find.from = function(source, query, options) {
+	this.link.find.from = this.link.find.source = function(source, query, options) {
 		return collection.findOne(lodash.merge(
 			Shuttler.Ref.new(source, '_source'), query
 		), options);
@@ -82,7 +82,7 @@ Mongo.Collection.prototype.attachGraph = function() {
 			this.targetChanged = !lodash.isEqual(this.previous._target, doc._target);
 			if (this.sourceChanged || this.targetChanged) {
 				this.action = 'update';
-				handler.call(this, userId, this.previous, doc, fieldNames, modifier, options);
+				handler.call(this, userId, collection._transform(this.previous), collection._transform(doc), fieldNames, modifier, options);
 			}
 		}, options);
 		collection.after.insert(function(userId, doc) {
@@ -100,7 +100,7 @@ Mongo.Collection.prototype.attachGraph = function() {
 			this.targetChanged = !lodash.isEqual(this.previous._target, doc._target);
 			if (this.sourceChanged || this.targetChanged) {
 				this.action = 'update';
-				handler.call(this, userId, this.previous, doc, fieldNames, modifier, options);
+				handler.call(this, userId, collection._transform(this.previous), collection._transform(doc), fieldNames, modifier, options);
 			}
 		}, options);
 		collection.after.remove(function(userId, doc) {

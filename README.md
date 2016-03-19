@@ -228,6 +228,10 @@ Shuttler.getRefByDirection('link', test.findOne('1'));
 
 ## Versions
 
+### 0.0.12
+* Document transformation on `.after` hooks.
+* Fix `.link.find.*` methods.
+
 ### 0.0.9
 * New syntax of hooks with `unlinked` and `linked` variables.
 * Little fixes
