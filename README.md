@@ -44,38 +44,50 @@ Add to collection `collection.isGraph = true;`.
 #### collection.link.update
 > (link: Document|Ref|String, source: Document|Ref, target: Document|Ref, customUpdateQuery: Object, callback?: Function) => count: Number
 
+#### collection.link.update.source
+> (link: Document|Ref|String, source: Document|Ref, customUpdateQuery: Object, callback?: Function) => count: Number
+
+##### Aliases
+* `collection.link.update.from`
+
+#### collection.link.update.target
+> (link: Document|Ref|String, target: Document|Ref, customUpdateQuery: Object, callback?: Function) => count: Number
+
+##### Aliases
+* `collection.link.update.to`
+
 #### collection.link.find
 > (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 
 ##### Aliases
 * `collection.link.findOne` `collection.links.findOne`
 
-#### collection.link.find.to
+#### collection.link.find.target
 > (target: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 
 ##### Aliases
-* `collection.*.*.target`
+* `collection.*.*.to`
 
-#### collection.link.find.from
+#### collection.link.find.source
 > (source: Document|Ref|(id: String), query: Object, options: Object) => Document|undefined
 
 ##### Aliases
-* `collection.*.*.source`
+* `collection.*.*.from`
 
 #### collection.links.find
 > (source: Document|Ref|(id: String), target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 
-#### collection.links.find.to
+#### collection.links.find.target
 > (target: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 
 ##### Aliases
-* `collection.*.*.target`
+* `collection.*.*.to`
 
-#### collection.links.find.from
+#### collection.links.find.source
 > (source: Document|Ref|(id: String), query: Object, options: Object) => Cursor
 
 ##### Aliases
-* `collection.*.*.source`
+* `collection.*.*.from`
 
 ### Hooks
 Used package [matb33:collection-hooks](https://github.com/matb33/meteor-collection-hooks).
@@ -227,6 +239,9 @@ Shuttler.getRefByDirection('link', test.findOne('1'));
 [Source code](https://github.com/meteor-shuttler/graphs/blob/master/graphs.js#L225-L240)
 
 ## Versions
+
+### 0.0.14
+* Added `.link.update.to` `.link.update.target` `.link.update.from``.link.update.source`
 
 ### 0.0.12
 * Document transformation on `.after` hooks.
