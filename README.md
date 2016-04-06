@@ -1,6 +1,6 @@
 # Graphs
 
-[![Join the chat at https://gitter.im/meteor-shuttler/graphs](https://badges.gitter.im/meteor-shuttler/graphs.svg)](https://gitter.im/meteor-shuttler/graphs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[Examples](http://meteor-shuttler.herokuapp.com/graphs) [GitHub](https://github.com/meteor-shuttler/graphs) [Atmosphere.js](atmospherejs.com/shuttler/graphs)
 
 Oriented graph methods with shema and restrictions.
 
