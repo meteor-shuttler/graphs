@@ -1,16 +1,23 @@
-// ()
-Mongo.Collection.prototype.attachGraph = function() {
+// (options?: Options)
+Mongo.Collection.prototype.attachGraph = function(options) {
 	if (this.isGraph) throw new Meteor.Error('Collection '+this._name+' is already graph.');
+	
+	var options = lodash.defaults(typeof(options) === 'object'?options:{}, {
+		schema: true
+	});
+	
 	this.isGraph = true;
 	
 	var collection = this;
 	
-	this.attachSchema(
-		new SimpleSchema({
-			_source: { type: Shuttler.Ref.Schema },
-			_target: { type: Shuttler.Ref.Schema }
-		})
-	);
+	if (options.schema) {
+		this.attachSchema(
+			new SimpleSchema({
+				_source: { type: Shuttler.Ref.Schema },
+				_target: { type: Shuttler.Ref.Schema }
+			})
+		);
+	}
 	
 	this.link = {};
 	this.links = {};

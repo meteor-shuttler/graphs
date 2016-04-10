@@ -32,11 +32,22 @@ b1.source() // { _id: 'a1' }
 ### Methods
 
 #### collection.attachGraph
-> ()
+> (options?: Options)
 
 Attach to the collection, all methods and all helpers.
 
 Add to collection `collection.isGraph = true;`.
+
+##### Options
+
+###### schema
+> Boolean
+
+Allows to forbid automatic attach scheme.
+
+```js
+collection.attachGraph({ schema: false });
+```
 
 #### collection.link.insert
 > (source: Document|Ref, target: Document|Ref, customFields: Object, callback?: Function) => id: String
@@ -239,6 +250,9 @@ Shuttler.getRefByDirection('link', test.findOne('1'));
 [Source code](https://github.com/meteor-shuttler/graphs/blob/master/graphs.js#L225-L240)
 
 ## Versions
+
+### 0.0.16
+* `collection.attachGraph` `options` argument with `schema` option.
 
 ### 0.0.14
 * Added `.link.update.to` `.link.update.target` `.link.update.from``.link.update.source`
