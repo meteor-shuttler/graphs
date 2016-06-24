@@ -41,7 +41,7 @@ Mongo.Collection.prototype.attachGraph = function(options) {
 	};
 	
 	// (link: Document|Ref|String, source: Document|Ref, customUpdateQuery: Object, callback?: Function) => count: Number
-	this.link.update.source = this.link.update.from = function(link, source, target, customUpdateQuery, callback) {
+	this.link.update.source = this.link.update.from = function(link, source, customUpdateQuery, callback) {
 		return collection.update((typeof(link)=='string'?link:Shuttler.Ref.soft(link)._id),
 			lodash.merge(
 				{ $set: Shuttler.Ref.new(source, '_source') },
@@ -51,7 +51,7 @@ Mongo.Collection.prototype.attachGraph = function(options) {
 	};
 	
 	// (link: Document|Ref|String, target: Document|Ref, customUpdateQuery: Object, callback?: Function) => count: Number
-	this.link.update.target = this.link.update.to = function(link, source, target, customUpdateQuery, callback) {
+	this.link.update.target = this.link.update.to = function(link, target, customUpdateQuery, callback) {
 		return collection.update((typeof(link)=='string'?link:Shuttler.Ref.soft(link)._id),
 			lodash.merge(
 				{ $set: Shuttler.Ref.new(target, '_target') },

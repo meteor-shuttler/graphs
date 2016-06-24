@@ -251,6 +251,9 @@ Shuttler.getRefByDirection('link', test.findOne('1'));
 
 ## Versions
 
+### 0.0.17
+* Fix `.link.update` arguments bug.
+
 ### 0.0.16
 * `collection.attachGraph` `options` argument with `schema` option.
 
